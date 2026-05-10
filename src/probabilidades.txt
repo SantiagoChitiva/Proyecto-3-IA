@@ -1,0 +1,48 @@
+# Tablas de Probabilidad Condicional - Ejemplo de clase
+#
+# Formato de cada bloque:
+#   [NombreNodo]
+#   VALORES: val1, val2, ...
+#   CONDICION: val_padre1, val_padre2, ... | prob1, prob2, ...
+#
+# Para nodos raíz (sin padres), la condición antes del '|' se deja vacía:
+#   CONDICION: | prob1, prob2, ...
+#
+# El orden de las probabilidades en cada CONDICION debe coincidir
+# con el orden de VALORES declarado para ese nodo.
+
+# ─────────────────────────────────────────────
+# Nodo raíz: Rain (sin padres)
+# ─────────────────────────────────────────────
+[Rain]
+VALORES: none, light, heavy
+CONDICION: | 0.7, 0.2, 0.1
+
+# ─────────────────────────────────────────────
+# Nodo: Maintenance  (padre: Rain)
+# ─────────────────────────────────────────────
+[Maintenance]
+VALORES: yes, no
+CONDICION: none  | 0.4, 0.6
+CONDICION: light | 0.2, 0.8
+CONDICION: heavy | 0.1, 0.9
+
+# ─────────────────────────────────────────────
+# Nodo: Train  (padres en orden: Rain, Maintenance)
+# ─────────────────────────────────────────────
+[Train]
+VALORES: on time, delayed
+CONDICION: none, yes  | 0.8, 0.2
+CONDICION: none, no   | 0.9, 0.1
+CONDICION: light, yes | 0.6, 0.4
+CONDICION: light, no  | 0.7, 0.3
+CONDICION: heavy, yes | 0.4, 0.6
+CONDICION: heavy, no  | 0.5, 0.5
+
+# ─────────────────────────────────────────────
+# Nodo: Appointment  (padre: Train)
+# ─────────────────────────────────────────────
+[Appointment]
+VALORES: attend, miss
+CONDICION: on time | 0.9, 0.1
+CONDICION: delayed | 0.6, 0.4
