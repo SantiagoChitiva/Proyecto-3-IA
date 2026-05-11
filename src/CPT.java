@@ -54,6 +54,7 @@ public class CPT {
      * -----------------------------------------------------------------------
      */
     // TODO (Persona 2): declarar el atributo "tabla" aquí
+    private Map<String, Map<String, Double>> tabla;
 
 
     /**
@@ -70,6 +71,7 @@ public class CPT {
      * -----------------------------------------------------------------------
      */
     // TODO (Persona 2): declarar el atributo "valoresNodo" aquí
+    private List<String> valoresNodo;
 
 
     /**
@@ -86,6 +88,8 @@ public class CPT {
     public CPT(String nombreNodo, List<String> valoresNodo) {
         this.nombreNodo = nombreNodo;
         // TODO (Persona 2): inicializar valoresNodo y tabla
+        this.valoresNodo = valoresNodo;
+        this.tabla = new LinkedHashMap<>();
     }
 
 
@@ -111,6 +115,7 @@ public class CPT {
      */
     public void agregarFila(String claveCondicion, Map<String, Double> distribucion) {
         // TODO (Persona 2): implementar
+        tabla.put(claveCondicion, distribucion);
     }
 
     /**
@@ -134,7 +139,17 @@ public class CPT {
      */
     public double obtenerProbabilidad(String valorNodo, String claveCondicion) {
         // TODO (Persona 2): implementar
-        return -1.0; // placeholder, reemplazar con la lógica real
+        Map<String, Double> distribucion = tabla.get(claveCondicion);
+        if (distribucion == null) {
+            System.out.println("Advertencia: No se encontró distribución para condición '" + claveCondicion + "' en CPT de " + nombreNodo);
+            return -1.0;
+        }
+        Double prob = distribucion.get(valorNodo);
+        if (prob == null) {
+            System.out.println("Advertencia: No se encontró probabilidad para valor '" + valorNodo + "' en condición '" + claveCondicion + "' de " + nombreNodo);
+            return -1.0;
+        }
+        return prob;
     }
 
     /**
@@ -149,7 +164,7 @@ public class CPT {
      */
     public Map<String, Double> obtenerDistribucion(String claveCondicion) {
         // TODO (Persona 2): implementar
-        return null; // placeholder
+        return tabla.get(claveCondicion);
     }
 
     /**
@@ -176,8 +191,41 @@ public class CPT {
      */
     public void imprimirCPT() {
         // TODO (Persona 2): implementar
-        System.out.println("  === CPT: " + nombreNodo
-                + " === [pendiente de implementar por Persona 2]");
+        System.out.println("=== CPT: " + nombreNodo + " ===");
+        if (valoresNodo == null || valoresNodo.isEmpty()) {
+            System.out.println("  (Sin valores definidos)");
+            return;
+        }
+        // Cabecera
+        System.out.print("Condición");
+        for (String val : valoresNodo) {
+            System.out.print(" | " + val);
+        }
+        System.out.println();
+        // Separador
+        System.out.print("---------");
+        for (int i = 0; i < valoresNodo.size(); i++) {
+            System.out.print("+--------");
+        }
+        System.out.println();
+        // Filas
+        for (Map.Entry<String, Map<String, Double>> entry : tabla.entrySet()) {
+            String condicion = entry.getKey();
+            if (condicion.isEmpty()) {
+                condicion = "(raíz)";
+            }
+            System.out.printf("%-9s", condicion);
+            Map<String, Double> dist = entry.getValue();
+            for (String val : valoresNodo) {
+                Double prob = dist.get(val);
+                if (prob != null) {
+                    System.out.printf(" | %6.3f", prob);
+                } else {
+                    System.out.print(" |   ?   ");
+                }
+            }
+            System.out.println();
+        }
     }
 
 
@@ -193,7 +241,7 @@ public class CPT {
      */
     public List<String> getValoresNodo() {
         // TODO (Persona 2): return valoresNodo;
-        return null;
+        return valoresNodo;
     }
 
     /**
@@ -202,6 +250,6 @@ public class CPT {
      */
     public Map<String, Map<String, Double>> getTabla() {
         // TODO (Persona 2): return tabla;
-        return null;
+        return tabla;
     }
 }

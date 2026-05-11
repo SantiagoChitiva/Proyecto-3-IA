@@ -104,7 +104,52 @@ public class LectorCPT {
      */
     public static void leerProbabilidades(String rutaArchivo, RedBayesiana red) {
         // TODO (Persona 2): implementar según el algoritmo descrito arriba
-        System.out.println("  [LectorCPT] Pendiente de implementar por Persona 2.");
+        try (BufferedReader lector = new BufferedReader(new FileReader(rutaArchivo))) {
+            String linea;
+            String nombreNodoActual = null;
+            List<String> valoresActuales = null;
+            CPT cptActual = null;
+
+            while ((linea = lector.readLine()) != null) {
+                linea = linea.trim();
+                if (linea.isEmpty() || linea.startsWith("#")) continue;
+
+                if (linea.startsWith("[") && linea.endsWith("]")) {
+                    // Nuevo bloque
+                    if (cptActual != null) {
+                        red.asignarCPT(nombreNodoActual, cptActual);
+                    }
+                    nombreNodoActual = linea.substring(1, linea.length() - 1).trim();
+                    valoresActuales = null;
+                    cptActual = null;
+                } else if (linea.startsWith("VALORES:")) {
+                    String valoresStr = linea.substring(8).trim();
+                    valoresActuales = new ArrayList<>();
+                    for (String v : valoresStr.split(",")) {
+                        valoresActuales.add(v.trim());
+                    }
+                    cptActual = new CPT(nombreNodoActual, valoresActuales);
+                } else if (linea.startsWith("CONDICION:")) {
+                    if (cptActual != null && valoresActuales != null) {
+                        String resto = linea.substring(10).trim();
+                        Object[] resultado = parsearCondicion(resto, valoresActuales);
+                        if (resultado != null) {
+                            String clave = (String) resultado[0];
+                            Map<String, Double> dist = (Map<String, Double>) resultado[1];
+                            cptActual.agregarFila(clave, dist);
+                        }
+                    }
+                }
+            }
+            // Asignar el último
+            if (cptActual != null) {
+                red.asignarCPT(nombreNodoActual, cptActual);
+            }
+            System.out.println("  Probabilidades cargadas.");
+        } catch (IOException e) {
+            System.out.println("Error: No se pudo leer: " + rutaArchivo);
+            System.out.println("Causa: " + e.getMessage());
+        }
     }
 
     /**
@@ -150,6 +195,44 @@ public class LectorCPT {
      */
     private static Object[] parsearCondicion(String texto, List<String> valoresNodo) {
         // TODO (Persona 2): implementar según el algoritmo descrito arriba
-        return null; // placeholder
+        int posBarra = texto.indexOf('|');
+        if (posBarra == -1) {
+            System.out.println("Error: Falta '|' en condición: " + texto);
+            return null;
+        }
+        String parteIzq = texto.substring(0, posBarra).trim();
+        String parteDer = texto.substring(posBarra + 1).trim();
+
+        String clave;
+        if (parteIzq.isEmpty()) {
+            clave = "";
+        } else {
+            String[] tokensCond = parteIzq.split(",");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < tokensCond.length; i++) {
+                sb.append(tokensCond[i].trim());
+                if (i < tokensCond.length - 1) sb.append(",");
+            }
+            clave = sb.toString();
+        }
+
+        String[] tokensProb = parteDer.split(",");
+        if (tokensProb.length != valoresNodo.size()) {
+            System.out.println("Error: Número de probabilidades no coincide con valores del nodo. Esperado: " + valoresNodo.size() + ", encontrado: " + tokensProb.length);
+            return null;
+        }
+
+        Map<String, Double> distribucion = new LinkedHashMap<>();
+        try {
+            for (int i = 0; i < valoresNodo.size(); i++) {
+                double prob = Double.parseDouble(tokensProb[i].trim());
+                distribucion.put(valoresNodo.get(i), prob);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Probabilidad no numérica en: " + parteDer);
+            return null;
+        }
+
+        return new Object[]{clave, distribucion};
     }
 }
