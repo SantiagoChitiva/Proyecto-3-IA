@@ -1,0 +1,12 @@
+# Red bayesiana - Ejemplo de clase
+# Formato de cada línea:
+#   NombrePadre[val1,val2,...] -> NombreHijo[val1,val2,...]
+#
+# Estructura de la red:
+#   Rain ──► Maintenance ──► Train ──► Appointment
+#   Rain ─────────────────────────► Train
+
+Rain[none,light,heavy]   -> Maintenance[yes,no]
+Rain[none,light,heavy]   -> Train[on time,delayed]
+Maintenance[yes,no]      -> Train[on time,delayed]
+Train[on time,delayed]   -> Appointment[attend,miss]
