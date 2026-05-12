@@ -3,11 +3,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/*Representa la red bayesiana completa como un grafo dirigido
- Contiene todos los nodos y arcos
- - Persona 2: llama a asignarCPT() para adjuntar las tablas de probabilidad.
- - Persona 3: usa obtenerNodo(), obtenerRaices() y getNodos() para recorrer la red durante la inferencia.
- - Persona 4: usa inferir() del motor (que a su vez usa esta clase) para ejecutar las consultas de validación.
+/**
+ * Representa la red bayesiana como un grafo dirigido.
+ *
+ * Decisiones:
+ * - Los nodos se guardan en un LinkedHashMap para preservar el orden de lectura.
+ * - Los arcos se mantienen en una lista para facilitar la visualización.
+ * - Agregar un nodo es idempotente para evitar duplicados al leer archivos.
  */
 public class RedBayesiana {
     // Mapa de todos los nodos: nombre → objeto Nodo.
@@ -61,11 +63,10 @@ public class RedBayesiana {
     }
 
     // ---------------------------------------------------------------
-    // Punto de integración con Persona 2
+    // Integración de CPTs
     // ---------------------------------------------------------------
 
-    /*Asigna una tabla de probabilidad condicional (CPT) a un nodo de la red
-     La Persona 2 llama a este método desde LectorCPT una vez que ha parseado el bloque correspondiente del archivo de probabilidades
+    /*Asigna una tabla de probabilidad condicional (CPT) a un nodo de la red.
      * @param nombreNodo Nombre del nodo al que pertenece la CPT
      * @param cpt        Tabla de probabilidad ya construida
      */
@@ -167,12 +168,10 @@ public class RedBayesiana {
         }
     }
 
-    // Visualización de CPTs (Persona 2 implementa CPT.imprimirCPT())
+    // Visualización de CPTs
 
-    /*Imprime todas las tablas de probabilidad condicional de la red
-     * Este método ya está conectado: cuando la Persona 2 implemente
-     * CPT.imprimirCPT(), este método la llamará automáticamente
-     * para cada nodo que tenga CPT asignada.
+    /*Imprime todas las tablas de probabilidad condicional de la red.
+     * Llama a CPT.imprimirCPT() para cada nodo que tenga CPT asignada.
      */
     public void imprimirTodasCPT() {
         System.out.println("\nTablas de Probabilidad\n");

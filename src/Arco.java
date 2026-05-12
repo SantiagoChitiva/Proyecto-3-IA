@@ -1,6 +1,9 @@
-/*Representa un arco dirigido dentro de la red bayesiana
- Conecta un nodo origen (padre) con un nodo destino (hijo)
- p. ej: Rain -> Maintenance (Rain es padre, Maintenance es hijo)
+/**
+ * Representa un arco dirigido en la red bayesiana.
+ *
+ * Decisiones: se guardan referencias directas a los nodos para evitar
+ * búsquedas por nombre y el arco se imprime con un formato simple de
+ * depuración.
  */
 public class Arco {
     // Nodo de origen del arco: padre

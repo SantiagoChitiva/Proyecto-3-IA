@@ -4,28 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ============================================================
- * PERSONA 3
- * ============================================================
+ * Motor de inferencia por enumeración para una red bayesiana.
  *
- * Clase encargada de implementar el Motor de Inferencia
- * por Enumeración para una Red Bayesiana.
- *
- * Este motor permite calcular probabilidades condicionales
- * de la forma:
- *
- *      P(X | evidencia)
- *
- * Por ejemplo:
- *
- *      P(Rain | Appointment = miss)
- *      P(Train | Rain = heavy)
- *      P(Appointment | Train = on time)
- *
- * El algoritmo utilizado es el algoritmo clásico de
- * inferencia por enumeración, en el cual se recorren todas
- * las variables de la red y se suman los posibles valores de
- * las variables ocultas.
+ * Decisiones:
+ * - Se procesa la red en orden topológico para respetar dependencias.
+ * - Se calcula una distribución no normalizada y se normaliza al final.
+ * - La traza es opcional y no altera el cálculo, solo imprime el flujo.
  */
 public class MotorInferencia {
 

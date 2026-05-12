@@ -1,10 +1,13 @@
 import java.util.ArrayList;
 import java.util.List;
 
-/*Representa un nodo dentro de la red bayesiana
- Cada nodo corresponde a una variable aleatoria con sus posibles valores
- y su tabla de probabilidad (CPT) asociada.
- p. ej: el nodo "Rain" puede tomar los valores {none, light, heavy}.
+/**
+ * Representa un nodo de la red bayesiana.
+ *
+ * Decisiones:
+ * - Los valores se almacenan en una lista en el orden en que se declaran.
+ * - Padres e hijos se guardan como listas para preservar el orden de lectura.
+ * - La CPT se asigna después de construir la estructura del grafo.
  */
 public class Nodo {
 

@@ -2,19 +2,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-/*Lee el archivo de estructura de la red bayesiana y construye los objetos Nodo y Arco que conforman el grafo
- Formato de estructura.txt:
- - Cada línea define un arco:
- NombrePadre[val1,val2,...] -> NombreHijo[val1,val2,...]
-- Líneas con '#' son comentarios y se ignoran.
-- Líneas vacías se ignoran.
-- Un nodo puede aparecer en varias líneas; solo se crea la primera vez.
-Ejemplo (red del ejemplo de clase):
- # Red Bayesiana - Ejemplo de clase
-Rain[none,light,heavy]   -> Maintenance[yes,no]
-Rain[none,light,heavy]   -> Train[on time,delayed]
-Maintenance[yes,no]      -> Train[on time,delayed]
-Train[on time,delayed]   -> Appointment[attend,miss]
+/**
+ * Lee la estructura de una red bayesiana y construye el grafo.
+ *
+ * Decisiones:
+ * - Cada línea válida define un arco "Padre[...] -> Hijo[...]".
+ * - Se ignoran líneas vacías y comentarios con '#'.
+ * - Los nodos se crean una sola vez aunque aparezcan en varias líneas.
  */
 public class LectorEstructura {
     //Lee el archivo y construye la red bayesiana completa.
